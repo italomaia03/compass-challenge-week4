@@ -1,21 +1,69 @@
 import { Request, Response } from "express";
 import { tutors } from "../database/db";
 import { Pet, Tutor } from "../models/models";
+import { ITutor } from "../models/interfaces/ITutor";
+import { IPet } from "../models/interfaces/IPet";
 
 function createPet(req: Request, res: Response) {
-    const { tutorid } = req.params;
+    const { tutorId } = req.params;
     const { id, name, species, carry, weight, date_of_birth } = req.body;
-    const desiredID = Number(tutorid);
+    const desiredID: number = Number(tutorId);
     const desiredTutor = tutors.find((entity) => {
         return entity.id === desiredID;
     });
     if (!desiredTutor) {
         return res.status(500).json({ msg: "Fail" });
     }
-    const newPet = new Pet(id, name, species, carry, weight, date_of_birth);
+    const newPet: IPet = new Pet(
+        id,
+        name,
+        species,
+        carry,
+        weight,
+        date_of_birth
+    );
     desiredTutor.pets?.push(newPet);
 
-    res.status(200).json({ msg: "Pet created" });
+    res.status(201).json({ msg: "Pet created" });
 }
 
-export { createPet };
+function updatePet(req: Request, res: Response) {
+    const { petId, tutorId } = req.params;
+    const { id, name, species, carry, weight, date_of_birth } = req.body;
+
+    const desiredTutorID: number = Number(tutorId);
+    const desiredPetID: number = Number(petId);
+
+    const desiredTutor = tutors.find((entity) => {
+        return entity.id === desiredTutorID;
+    });
+
+    if (!desiredTutor) {
+        return res.status(500).json({ msg: "Fail" });
+    }
+
+    let desiredPet = desiredTutor.pets?.find((entity) => {
+        return entity.id === desiredPetID;
+    });
+
+    if (!desiredPet) {
+        return res.status(500).json({ msg: "Fail" });
+    }
+
+    const updatedPet: IPet = new Pet(
+        id,
+        name,
+        species,
+        carry,
+        weight,
+        date_of_birth
+    );
+
+    const desiredTutorIndex: number = tutors.indexOf(desiredTutor);
+    const desiredPetIndex: number = desiredTutor.pets.indexOf(desiredPet);
+    tutors[desiredTutorIndex].pets[desiredPetIndex] = updatedPet;
+
+    res.status(200).json({ msg: "Pet updated" });
+}
+
+export { createPet, updatePet };
