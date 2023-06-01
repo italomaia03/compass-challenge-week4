@@ -6,5 +6,5 @@ export interface ITutor {
     email: string;
     date_of_birth: string;
     zip_code: string;
-    pets?: IPet[];
+    pets: IPet[];
 }
