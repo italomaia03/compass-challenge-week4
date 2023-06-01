@@ -1,7 +1,6 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
+import { getAllTutors } from "../controllers/tutorController";
 
 export const router: Router = Router();
 
-router.route("/").get((_req: Request, res: Response) => {
-    res.send("It is working...");
-});
+router.route("/tutors").get(getAllTutors);
