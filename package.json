@@ -6,6 +6,7 @@
   "scripts": {
     "build": "npx rimraf dist/ && npx tsc",
     "start": "node dist/app.js",
+    "preserve": "npm run build",
     "serve": "concurrently \"npx tsc -w\" \"nodemon ./dist/app.js\""
   },
   "keywords": [
