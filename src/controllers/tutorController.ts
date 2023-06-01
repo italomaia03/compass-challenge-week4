@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { tutors } from "../database/db";
-import { Tutor, Pet } from "../models/models";
+import { Tutor } from "../models/models";
 
 function getAllTutors(_req: Request, res: Response) {
     res.status(200).json(tutors);
@@ -9,7 +9,7 @@ function getAllTutors(_req: Request, res: Response) {
 function createTutor(req: Request, res: Response) {
     const { id, name, phone, email, date_of_birth, zip_code } = req.body;
     const createdTutor = new Tutor(
-        Number(id),
+        id,
         name,
         phone,
         email,
