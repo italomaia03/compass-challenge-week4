@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Tutor = void 0;
 class Tutor {
-    constructor(id, name, phone, email, date_of_birth, zip_code, pets) {
+    constructor(id, name, phone, email, date_of_birth, zip_code, pets = []) {
         this.id = id;
         this.name = name;
         this.phone = phone;

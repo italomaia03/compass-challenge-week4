@@ -8,6 +8,6 @@ export class Tutor implements ITutor {
         public email: string,
         public date_of_birth: string,
         public zip_code: string,
-        public pets: IPet[]
+        public pets: IPet[] = []
     ) {}
 }

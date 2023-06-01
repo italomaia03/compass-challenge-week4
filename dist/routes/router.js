@@ -5,4 +5,5 @@ const express_1 = require("express");
 const tutorController_1 = require("../controllers/tutorController");
 exports.router = (0, express_1.Router)();
 exports.router.route("/tutors").get(tutorController_1.getAllTutors);
+exports.router.route("/tutor").post(tutorController_1.createTutor);
 //# sourceMappingURL=router.js.map
