@@ -24,7 +24,7 @@ function createPet(req: Request, res: Response) {
     );
     desiredTutor.pets?.push(newPet);
 
-    res.status(201).json({ msg: "Pet created" });
+    res.status(201).json({ msg: "Pet has been created" });
 }
 
 function updatePet(req: Request, res: Response) {
@@ -59,11 +59,41 @@ function updatePet(req: Request, res: Response) {
         date_of_birth
     );
 
-    const desiredTutorIndex: number = tutors.indexOf(desiredTutor);
     const desiredPetIndex: number = desiredTutor.pets.indexOf(desiredPet);
-    tutors[desiredTutorIndex].pets[desiredPetIndex] = updatedPet;
+    desiredTutor.pets[desiredPetIndex] = updatedPet;
 
-    res.status(200).json({ msg: "Pet updated" });
+    res.status(200).json({ msg: "Pet has been updated" });
 }
 
-export { createPet, updatePet };
+function deletePet(req: Request, res: Response) {
+    const { petId, tutorId } = req.params;
+
+    const desiredTutorID: number = Number(tutorId);
+    const desiredPetID: number = Number(petId);
+
+    const desiredTutor = tutors.find((entity) => {
+        return entity.id === desiredTutorID;
+    });
+
+    if (!desiredTutor) {
+        return res
+            .status(500)
+            .json({ msg: `There is no tutor with ID: ${desiredTutorID}` });
+    }
+
+    let desiredPet = desiredTutor.pets?.find((entity) => {
+        return entity.id === desiredPetID;
+    });
+
+    if (!desiredPet) {
+        return res
+            .status(500)
+            .json({ msg: `There is no pet with ID: ${desiredPetID}` });
+    }
+
+    const desiredPetIndex: number = desiredTutor.pets.indexOf(desiredPet);
+    desiredTutor.pets.splice(desiredPetIndex, 1);
+    res.status(200).json({ msg: "Pet has been successfully deleted" });
+}
+
+export { createPet, updatePet, deletePet };

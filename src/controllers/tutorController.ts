@@ -18,7 +18,7 @@ function createTutor(req: Request, res: Response) {
         zip_code
     );
     tutors.push(createdTutor);
-    res.status(201).json({ msg: "Tutor successfully created" });
+    res.status(201).json({ msg: "Tutor has been successfully created" });
 }
 
 function deleteTutor(req: Request, res: Response) {
@@ -30,7 +30,7 @@ function deleteTutor(req: Request, res: Response) {
         return res.status(500).json({ msg: "Fail" });
     }
     tutors.splice(tutors.indexOf(desiredTutor), 1);
-    res.status(200).json({ msg: "Tutor deleted" });
+    res.status(200).json({ msg: "Tutor has been deleted" });
 }
 
 export { getAllTutors, createTutor, deleteTutor };
