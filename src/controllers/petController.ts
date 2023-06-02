@@ -1,30 +1,47 @@
 import { Request, Response } from "express";
 import { tutors } from "../database/db";
-import { Pet, Tutor } from "../models/models";
-import { ITutor } from "../models/interfaces/ITutor";
+import { Pet } from "../models/models";
 import { IPet } from "../models/interfaces/IPet";
+import { validatePetSchema } from "../utils/petValidator";
 
-function createPet(req: Request, res: Response) {
-    const { tutorId } = req.params;
-    const { id, name, species, carry, weight, date_of_birth } = req.body;
-    const desiredID: number = Number(tutorId);
-    const desiredTutor = tutors.find((entity) => {
-        return entity.id === desiredID;
-    });
-    if (!desiredTutor) {
-        return res.status(500).json({ msg: "Fail" });
+async function createPet(req: Request, res: Response) {
+    try {
+        const { tutorId } = req.params;
+        const { id, name, species, carry, weight, date_of_birth } = req.body;
+        const desiredID: number = Number(tutorId);
+        const desiredTutor = tutors.find((entity) => {
+            return entity.id === desiredID;
+        });
+        if (!desiredTutor) {
+            return res
+                .status(404)
+                .json({ msg: `There is no tutor with ID ${tutorId}` });
+        }
+        const createdPet: IPet = new Pet(
+            Number(id),
+            name,
+            species,
+            carry,
+            Number(weight),
+            date_of_birth
+        );
+        await validatePetSchema(createdPet);
+        const validateId = desiredTutor.pets.find(
+            (pet) => pet.id === createdPet.id
+        );
+
+        if (validateId) {
+            throw new Error(
+                `Specified ID (${createdPet.id}) already being used. Please, try another number.`
+            );
+        }
+
+        desiredTutor.pets.push(createdPet);
+
+        res.status(201).json({ msg: "Pet has been created" });
+    } catch (error) {
+        res.status(400).json({ msg: `${error}` });
     }
-    const newPet: IPet = new Pet(
-        id,
-        name,
-        species,
-        carry,
-        weight,
-        date_of_birth
-    );
-    desiredTutor.pets?.push(newPet);
-
-    res.status(201).json({ msg: "Pet has been created" });
 }
 
 function updatePet(req: Request, res: Response) {
