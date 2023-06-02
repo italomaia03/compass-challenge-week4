@@ -44,42 +44,48 @@ async function createPet(req: Request, res: Response) {
     }
 }
 
-function updatePet(req: Request, res: Response) {
-    const { petId, tutorId } = req.params;
-    const { id, name, species, carry, weight, date_of_birth } = req.body;
+async function updatePet(req: Request, res: Response) {
+    try {
+        const { petId, tutorId } = req.params;
+        const { id, name, species, carry, weight, date_of_birth } = req.body;
 
-    const desiredTutorID: number = Number(tutorId);
-    const desiredPetID: number = Number(petId);
+        const desiredTutorID: number = Number(tutorId);
+        const desiredPetID: number = Number(petId);
 
-    const desiredTutor = tutors.find((entity) => {
-        return entity.id === desiredTutorID;
-    });
+        const desiredTutor = tutors.find((entity) => {
+            return entity.id === desiredTutorID;
+        });
 
-    if (!desiredTutor) {
-        return res.status(500).json({ msg: "Fail" });
+        if (!desiredTutor) {
+            return res.status(404).json({ msg: "Fail" });
+        }
+
+        let desiredPet = desiredTutor.pets?.find((entity) => {
+            return entity.id === desiredPetID;
+        });
+
+        if (!desiredPet) {
+            return res.status(404).json({ msg: "Fail" });
+        }
+
+        const updatedPet: IPet = new Pet(
+            id,
+            name,
+            species,
+            carry,
+            weight,
+            date_of_birth
+        );
+
+        await validatePetSchema(updatedPet);
+
+        const desiredPetIndex: number = desiredTutor.pets.indexOf(desiredPet);
+        desiredTutor.pets[desiredPetIndex] = updatedPet;
+
+        res.status(200).json({ msg: "Pet has been updated" });
+    } catch (error) {
+        res.status(400).json({ msg: `${error}` });
     }
-
-    let desiredPet = desiredTutor.pets?.find((entity) => {
-        return entity.id === desiredPetID;
-    });
-
-    if (!desiredPet) {
-        return res.status(500).json({ msg: "Fail" });
-    }
-
-    const updatedPet: IPet = new Pet(
-        id,
-        name,
-        species,
-        carry,
-        weight,
-        date_of_birth
-    );
-
-    const desiredPetIndex: number = desiredTutor.pets.indexOf(desiredPet);
-    desiredTutor.pets[desiredPetIndex] = updatedPet;
-
-    res.status(200).json({ msg: "Pet has been updated" });
 }
 
 function deletePet(req: Request, res: Response) {
@@ -94,7 +100,7 @@ function deletePet(req: Request, res: Response) {
 
     if (!desiredTutor) {
         return res
-            .status(500)
+            .status(404)
             .json({ msg: `There is no tutor with ID: ${desiredTutorID}` });
     }
 
@@ -104,7 +110,7 @@ function deletePet(req: Request, res: Response) {
 
     if (!desiredPet) {
         return res
-            .status(500)
+            .status(404)
             .json({ msg: `There is no pet with ID: ${desiredPetID}` });
     }
 
