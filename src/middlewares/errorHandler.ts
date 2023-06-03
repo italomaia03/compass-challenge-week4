@@ -1,14 +1,15 @@
 import { NextFunction, Request, Response } from "express";
-import { ValidationError } from "joi";
+import Joi from "joi";
+import { CustomValidationError } from "../errors/CustomValidationError";
 
 function errorHandler(
-    err: Error,
+    err: Object,
     _req: Request,
     res: Response,
     _next: NextFunction
 ) {
-    if (err instanceof ValidationError) {
-        return res.status(res.statusCode).json({
+    if (Joi.isError(err) || err instanceof CustomValidationError) {
+        return res.status(400).json({
             success: false,
             msg: err.message,
         });
