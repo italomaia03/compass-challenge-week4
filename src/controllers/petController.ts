@@ -1,10 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { tutors } from "../database/db";
 import { Pet } from "../models/models";
 import { IPet } from "../models/interfaces/IPet";
 import { validatePetSchema } from "../utils/petValidator";
+import { CustomValidationError } from "../errors/CustomValidationError";
 
-async function createPet(req: Request, res: Response) {
+async function createPet(req: Request, res: Response, next: NextFunction) {
     try {
         const { tutorId } = req.params;
         const { id, name, species, carry, weight, date_of_birth } = req.body;
@@ -13,9 +14,7 @@ async function createPet(req: Request, res: Response) {
             return entity.id === desiredID;
         });
         if (!desiredTutor) {
-            return res
-                .status(404)
-                .json({ msg: `There is no tutor with ID ${tutorId}` });
+            return next();
         }
         const createdPet: IPet = new Pet(
             Number(id),
@@ -31,8 +30,10 @@ async function createPet(req: Request, res: Response) {
         );
 
         if (validateId) {
-            throw new Error(
-                `Specified ID (${createdPet.id}) already being used. Please, try another number.`
+            return next(
+                new CustomValidationError(
+                    `Specified ID (${createdPet.id}) already being used. Please, try another number.`
+                )
             );
         }
 
@@ -40,11 +41,11 @@ async function createPet(req: Request, res: Response) {
 
         res.status(201).json({ msg: "Pet has been created" });
     } catch (error) {
-        res.status(400).json({ msg: `${error}` });
+        next(error);
     }
 }
 
-async function updatePet(req: Request, res: Response) {
+async function updatePet(req: Request, res: Response, next: NextFunction) {
     try {
         const { petId, tutorId } = req.params;
         const { id, name, species, carry, weight, date_of_birth } = req.body;
@@ -78,17 +79,25 @@ async function updatePet(req: Request, res: Response) {
         );
 
         await validatePetSchema(updatedPet);
+        const validateId: boolean = desiredPetID === updatedPet.id;
+        if (!validateId) {
+            return next(
+                new CustomValidationError(
+                    `Specified ID (${updatedPet.id}) must not be different from the one passed in the URL parameters.`
+                )
+            );
+        }
 
         const desiredPetIndex: number = desiredTutor.pets.indexOf(desiredPet);
         desiredTutor.pets[desiredPetIndex] = updatedPet;
 
         res.status(200).json({ msg: "Pet has been updated" });
     } catch (error) {
-        res.status(400).json({ msg: `${(error as Error).message}` });
+        next(error);
     }
 }
 
-function deletePet(req: Request, res: Response) {
+function deletePet(req: Request, res: Response, next: NextFunction) {
     const { petId, tutorId } = req.params;
 
     const desiredTutorID: number = Number(tutorId);
@@ -99,9 +108,7 @@ function deletePet(req: Request, res: Response) {
     });
 
     if (!desiredTutor) {
-        return res
-            .status(404)
-            .json({ msg: `There is no tutor with ID: ${desiredTutorID}` });
+        return next();
     }
 
     let desiredPet = desiredTutor.pets?.find((entity) => {
@@ -109,9 +116,7 @@ function deletePet(req: Request, res: Response) {
     });
 
     if (!desiredPet) {
-        return res
-            .status(404)
-            .json({ msg: `There is no pet with ID: ${desiredPetID}` });
+        return next();
     }
 
     const desiredPetIndex: number = desiredTutor.pets.indexOf(desiredPet);
