@@ -84,7 +84,7 @@ async function updatePet(req: Request, res: Response) {
 
         res.status(200).json({ msg: "Pet has been updated" });
     } catch (error) {
-        res.status(400).json({ msg: `${error}` });
+        res.status(400).json({ msg: `${(error as Error).message}` });
     }
 }
 
