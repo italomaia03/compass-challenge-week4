@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
-    title: Swagger Petstore - OpenAPI 3.0
+    title: Swagger Vet Clinic - OpenAPI 3.0
     description: |-
-        This is a Proof of Concept for a pet shop application microservice which seeks to manipulate data from tutors and pets.
+        This is a REST API performs CRUD operations with tutors and pets.
     contact:
         email: italo.maia.pb@compasso.com.br
     version: 1.0.0
@@ -14,6 +14,7 @@ servers:
       variables:
           port:
               default: "3000"
+              description: Put the port of your choice in the designated camp.
 tags:
     - name: Tutors
       description: Everything about tutors
