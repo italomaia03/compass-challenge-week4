@@ -7,8 +7,9 @@ This is a REST API performs CRUD operations with tutors and pets.
 ## Table of Contents
 
 -   [Technologies](#technologies)
--   [Installation](#installtion)
+-   [Installation](#technologies)
 -   [Running](#running-locally)
+-   [API Documentation](#api-documentation)
 
 ## Technologies
 
@@ -96,7 +97,7 @@ Now, all the dependencies are in place and the app is ready to run.
 
 ## Running locally
 
-After performing the installation, run the following command to run the application:
+After performing the instalation, run the following command to run the application:
 
 ```bash
   npm run start
@@ -138,3 +139,69 @@ If all goes well, open your browser and access the link:
 ```
 
 In this page, it is possible to test the API functionalities.
+
+## API Documentation
+
+#### Returns all tutors
+
+```http
+  GET /api/v1/tutors
+```
+
+#### Adds a tutor to database
+
+```http
+  POST /api/v1/tutor
+```
+
+#### Update tutor's attributes
+
+```http
+  PUT /api/v1/tutor/{:id}
+```
+
+| Parameter | Type     | Description                                      |
+| :-------- | :------- | :----------------------------------------------- |
+| `id`      | `number` | **Required**. ID of the tutor you want to update |
+
+#### Delete tutor from database
+
+```http
+  PUT /api/v1/tutor/{:id}
+```
+
+| Parameter | Type     | Description                                      |
+| :-------- | :------- | :----------------------------------------------- |
+| `id`      | `number` | **Required**. ID of the tutor you want to delete |
+
+#### Assigns a pet to a tutor
+
+```http
+  POST /api/v1/pet/{:tutorId}
+```
+
+| Parameter | Type     | Description                                              |
+| :-------- | :------- | :------------------------------------------------------- |
+| `tutorId` | `number` | **Required**. ID of the tutor you want to assign the pet |
+
+#### Update pet's attributes
+
+```http
+  PUT /api/v1/pet/{:petId}/tutor/{:tutorId}
+```
+
+| Parameter | Type     | Description                                           |
+| :-------- | :------- | :---------------------------------------------------- |
+| `petId`   | `number` | **Required**. ID of the pet you want to update        |
+| `tutorId` | `number` | **Required**. ID of the tutor responsible for the pet |
+
+#### Delete pet from database
+
+```http
+  PUT /api/v1/pet/{:petId}/tutor/{:tutorId}
+```
+
+| Parameter | Type     | Description                                           |
+| :-------- | :------- | :---------------------------------------------------- |
+| `petId`   | `number` | **Required**. ID of the pet you want to delete        |
+| `tutorId` | `number` | **Required**. ID of the tutor responsible for the pet |
