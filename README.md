@@ -97,7 +97,7 @@ Now, all the dependencies are in place and the app is ready to run.
 
 ## Running locally
 
-After finishing installing the dependencies, the application should be built. This process consists on transpiling and bundling the .ts files into a .js file. To do so, run the command
+After installing all the dependencies, the application should be built. This process is performed by running:
 
 ```bash
   npm run build
