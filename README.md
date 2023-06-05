@@ -97,16 +97,16 @@ Now, all the dependencies are in place and the app is ready to run.
 
 ## Running locally
 
-After performing the instalation, run the following command to run the application:
+After finishing installing the dependencies, the application should be built. This process consists on transpiling and bundling the .ts files into a .js file. To do so, run the command
+
+```bash
+  npm run build
+```
+
+Now, we can run the application with the command below:
 
 ```bash
   npm run start
-```
-
-or simply:
-
-```bash
-  npm start
 ```
 
 By default, the application will run on PORT 3000. If you have another service running on this PORT, you can assign a free port to run the application. The commands are as follow:
