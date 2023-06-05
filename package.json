@@ -5,7 +5,6 @@
     "main": "app.js",
     "scripts": {
         "build": "webpack",
-        "prestart": "npm run build",
         "start": "node dist/app.js",
         "serve": "tsnd --transpile-only ./src/app.ts"
     },
