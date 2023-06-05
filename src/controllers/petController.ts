@@ -58,7 +58,7 @@ async function updatePet(req: Request, res: Response, next: NextFunction) {
         });
 
         if (!desiredTutor) {
-            return res.status(404).json({ msg: "Fail" });
+            return next();
         }
 
         let desiredPet = desiredTutor.pets?.find((entity) => {
@@ -66,7 +66,7 @@ async function updatePet(req: Request, res: Response, next: NextFunction) {
         });
 
         if (!desiredPet) {
-            return res.status(404).json({ msg: "Fail" });
+            return next();
         }
 
         const updatedPet: IPet = new Pet(
